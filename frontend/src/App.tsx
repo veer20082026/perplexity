@@ -8,6 +8,8 @@ import { InfoModal } from './components/InfoModal';
 import { CalculateResponse } from './types';
 import { AlertCircle, GraduationCap } from 'lucide-react';
 
+const API_BASE = ((import.meta as any).env?.VITE_API_URL || '').replace(/\/$/, '');
+
 export function App() {
   const [inputText, setInputText] = useState('The cat sat on the mat.');
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +34,7 @@ export function App() {
 
   // Check backend health on load
   useEffect(() => {
-    fetch('/health')
+    fetch(`${API_BASE}/health`)
       .then((res) => res.json())
       .then((data) => {
         if (data.model_loaded) {
@@ -63,7 +65,7 @@ export function App() {
     }
 
     const timer = setTimeout(() => {
-      fetch('/count-tokens', {
+      fetch(`${API_BASE}/count-tokens`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: inputText }),
@@ -96,7 +98,7 @@ export function App() {
     setError(null);
 
     try {
-      const response = await fetch('/calculate', {
+      const response = await fetch(`${API_BASE}/calculate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
